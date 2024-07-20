@@ -132,7 +132,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "*Build Failed* :red_circle:\n*Project*: `<< pipeline.project.name >>`\n*Branch*: `<< pipeline.git.branch >>`\n*Build Number*: `<< pipeline.number >>`\n*Job*: `<< job.name >>`\n*Reason*: `<< pipeline.fail.message >>`"
+                    "text": "*Build Failed* :red_circle:\n*Project*: `<< pipeline.project.git_url >>`\n*Branch*: `<< pipeline.git.branch >>`\n*Build Number*: `<< pipeline.number >>`\n*Job*: `<< job.name >>`\n*Commit*: `<< pipeline.git.revision >>`\n*Workflow*: `<< workflow.name >>`\n<https://circleci.com/gh/<< pipeline.project.username >>/<< pipeline.project.reponame >>/<< pipeline.number >>|View on CircleCI>"
                   }
                 }
               ]
