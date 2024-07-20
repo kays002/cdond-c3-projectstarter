@@ -124,7 +124,6 @@ jobs:
           key: frontend-scan
       - slack/notify:
           event: fail
-          webhook: $SLACK_ACCESS_TOKEN
           template: basic_fail_1
   scan-backend:
     docker:
@@ -146,7 +145,6 @@ jobs:
           key: backend-scan
       - slack/notify:
           event: fail
-          webhook: $SLACK_ACCESS_TOKEN
           template: basic_fail_1
 
 #   deploy-infrastructure:
