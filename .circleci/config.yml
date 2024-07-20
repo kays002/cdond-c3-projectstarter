@@ -52,6 +52,12 @@ jobs:
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+      - slack/notify:
+          event: pass
+          template: basic_success_1
 
   build-backend:
     docker:
@@ -69,6 +75,12 @@ jobs:
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+      - slack/notify:
+          event: pass
+          template: basic_success_1
 
   test-frontend:
     docker:
@@ -86,6 +98,12 @@ jobs:
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-test
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+      - slack/notify:
+          event: pass
+          template: basic_success_1
                 
   test-backend:
     docker:
@@ -103,6 +121,12 @@ jobs:
       - save_cache:
           paths: [backend/node_modules]
           key: backend-test
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+      - slack/notify:
+          event: pass
+          template: basic_success_1
             
   scan-frontend:
     docker:
@@ -124,19 +148,10 @@ jobs:
           key: frontend-scan
       - slack/notify:
           event: fail
-          #template: basic_fail_1
-          custom: |
-            {
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "*Build Failed* :red_circle:\n*Project*: `<< pipeline.project.git_url >>`\n*Branch*: `<< pipeline.git.branch >>`\n*Build Number*: `<< pipeline.number >>`\n*Job*: `<< job.name >>`\n*Commit*: `<< pipeline.git.revision >>`\n*Workflow*: `<< workflow.name >>`\n<https://circleci.com/gh/<< pipeline.project.username >>/<< pipeline.project.reponame >>/<< pipeline.number >>|View on CircleCI>"
-                  }
-                }
-              ]
-            }
+          template: basic_fail_1
+      - slack/notify:
+          event: pass
+          template: basic_success_1
   scan-backend:
     docker:
       - image: circleci/node:13.8.0
@@ -158,6 +173,10 @@ jobs:
       - slack/notify:
           event: fail
           template: basic_fail_1
+      - slack/notify:
+          event: pass
+          template: basic_success_1
+      
 
 #   deploy-infrastructure:
 #     docker:
