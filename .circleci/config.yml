@@ -124,7 +124,19 @@ jobs:
           key: frontend-scan
       - slack/notify:
           event: fail
-          template: basic_fail_1
+          #template: basic_fail_1
+          custom: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Build Failed* :red_circle:\n*Project*: `<< pipeline.project.name >>`\n*Branch*: `<< pipeline.git.branch >>`\n*Build Number*: `<< pipeline.number >>`\n*Job*: `<< job.name >>`\n*Reason*: `<< pipeline.fail.message >>`"
+                  }
+                }
+              ]
+            }
   scan-backend:
     docker:
       - image: circleci/node:13.8.0
