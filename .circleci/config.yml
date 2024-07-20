@@ -115,10 +115,14 @@ jobs:
             cd frontend
             npm install
             npm audit fix --force
-            npm audit --audit-level=critical || true
+            npm audit --audit-level=critical
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-scan
+      - slack/notify:
+          event: fail
+          webhook: $SLACK_ACCESS_TOKEN
+          template: basic_fail_1
   scan-backend:
     docker:
       - image: circleci/node:13.8.0
@@ -137,6 +141,10 @@ jobs:
       - save_cache:
           paths: [backend/node_modules]
           key: backend-scan
+      - slack/notify:
+          event: fail
+          webhook: $SLACK_ACCESS_TOKEN
+          template: basic_fail_1
 
 #   deploy-infrastructure:
 #     docker:
