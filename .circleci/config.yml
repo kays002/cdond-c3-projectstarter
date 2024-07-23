@@ -216,7 +216,6 @@ jobs:
       - image: python:3.9-alpine3.16
     steps:
       - checkout
-      - run: yum install -y tar gzip
       - add_ssh_keys:
           fingerprint: "SHA256:5JmoqC1x3xpooKaBtAKbrd4gy4iH1ZDlL/rjidb+bZY"
       # attach workspace
