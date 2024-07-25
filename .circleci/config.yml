@@ -245,7 +245,8 @@ jobs:
           command: |
             cd backend
             npm install
-            cat /home/circleci/.npm/_logs/2024-07-25T16_23_57_470Z-debug.log
+            LOG_FILE=$(ls -Art /home/circleci/.npm/_logs/ | tail -n 1)
+            cat /home/circleci/.npm/_logs/$LOG_FILE
             npm run migrations > migrations_dump.txt
       - run:
           name: Send migration results to memstash
