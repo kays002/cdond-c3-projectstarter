@@ -26,14 +26,14 @@ commands:
   revert-migrations:
     description: Revert the last migration if successfully run in the current workflow.
     parameters:
-      # Add parameter here     
+      # Add parameter here
     steps:
       - run:
           name: Revert migrations
           # Add when this will run
+          when: on_fail
           command: |
-            # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-            SUCCESS = 1
+            SUCCESS=curl https://kvdb.io/FkTddyghNhT6cXXxNuB34M/migration_${CIRCLE_WORKFLOW_ID:0:7}
             if(( $SUCCESS==1 )); 
             then
             #  cd ~/project/backend
@@ -218,13 +218,14 @@ jobs:
           paths:
             - project/.circleci/ansible/inventory.txt
       - destroy_environment
-      # Here's where you will add some code to rollback on failure      
+      # Here's where you will add some code to rollback on failure
 
   configure-infrastructure:
     docker:
       - image: cimg/node:20.4.0
     steps:
       - checkout
+      - install_awscli
       - add_ssh_keys:
           fingerprint: "SHA256:5JmoqC1x3xpooKaBtAKbrd4gy4iH1ZDlL/rjidb+bZY"
       # attach workspace
@@ -274,26 +275,60 @@ jobs:
 #      # Here's where you will add some code to rollback on failure
 # curl -H "Content-Type: text/plain" -H "7933fe63-4687-4fa1-8426-aa25aa1730ec" --request PUT --data "1" https://api.memstash.io/values/migration_$
 
-#   deploy-frontend:
-#     docker:
-#       # Docker image here that supports AWS CLI
-#     steps:
-#       # Checkout code from git
-#       - run:
-#           name: Install dependencies
-#           command: |
-#             # your code here
-#       - run:
-#           name: Get backend url
-#           command: |
-#             # your code here
-#             export API_URL="http://${BACKEND_IP}:3030"
-#             echo "${API_URL}"
-#       - run:
-#           name: Deploy frontend objects
-#           command: |
-#             # your code here
-#       # Here's where you will add some code to rollback on failure      
+  deploy-frontend:
+    docker:
+      # Docker image here that supports AWS CLI
+      - image: cimg/node:20.4.0
+    steps:
+      # Checkout code from git
+      - checkout
+      - install_awscli
+      - run:
+          name: Install Node.js 20
+          command: |
+            # Install Node.js LTS version as our base Node.js version
+            curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+            sudo apt install -y nodejs
+            # Use n version manager to use Node.js v20.4.0
+            sudo npm install --global n
+            sudo n 20.4.0
+
+      - restore_cache:
+          keys: [frontend-build]
+
+      - run:
+          name: Install dependencies
+          command: |
+            cd frontend
+            npm install
+
+      - run:
+          name: Get backend url
+          command: |
+            export BACKEND_IP=$(aws ec2 describe-instances \
+            --filters Name=tag-value,Values="backend-${CIRCLE_WORKFLOW_ID}" \
+            --query 'Reservations[*].Instances[*].PublicIpAddress' \
+            --output text)
+            export API_URL="http://${BACKEND_IP}:3030"
+            echo "API_URL = ${API_URL}"
+            echo "API_URL=http://${BACKEND_IP}:3030" >> frontend/.env
+            cat frontend/.env
+
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - project/frontend/.env
+
+      - run:
+          name: Deploy frontend objects
+          command: |
+            cd frontend
+            npm install
+            npm run build
+            tar -czvf artifact-"$CIRCLE_WORKFLOW_ID".tar.gz dist
+            aws s3 cp dist s3://udapeople-$CIRCLE_WORKFLOW_ID --recursive
+      - destroy_environment
+      - revert-migrations
                     
 #   deploy-backend:
 #     docker:
