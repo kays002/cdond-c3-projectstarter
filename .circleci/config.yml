@@ -372,7 +372,7 @@ jobs:
             cd .circle/ansible
             echo "contents of inventory.txt"
             cat inventory.txt
-            ansible-playbook -i .circleci/ansible/inventory.txt .circleci/ansible/deploy-backend.yml
+            ansible-playbook -i inventory.txt ansible/deploy-backend.yml
       - destroy_environment
       - revert-migrations
 
