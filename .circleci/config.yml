@@ -398,7 +398,7 @@ jobs:
             then
               exit 0
             else
-              exit 0
+              exit 1
             fi
       - run:
           name: Backend smoke test.
@@ -407,7 +407,6 @@ jobs:
             # Fetch and prepare the BACKEND_IP env var
             cd backend
             export BACKEND_IP=$(aws ec2 describe-instances \
-              --filters Name=tag-value,Values="backend-${CIRCLE_WORKFLOW_ID}" \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --output text)
             export API_URL="http://${BACKEND_IP}:3030/api/status"
