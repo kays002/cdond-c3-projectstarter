@@ -279,7 +279,7 @@ jobs:
   deploy-frontend:
     docker:
       # Docker image here that supports AWS CLI
-      - image: cimg/node:20.4.0
+      - image: cimg/node:13.8.0
     steps:
       # Checkout code from git
       - checkout
