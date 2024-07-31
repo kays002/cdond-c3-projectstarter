@@ -9,9 +9,9 @@ export interface EnvConfig {
   LOGGLY_SUBDOMAIN: string;
   LOGGLY_TOKEN: string;
   TYPEORM_CONNECTION: any;
+  TYPEORM_ENTITIES: string;
   TYPEORM_HOST: string;
   TYPEORM_PORT: number;
-  TYPEORM_ENTITIES: string;
   TYPEORM_DATABASE: string;
   TYPEORM_USERNAME: string;
   TYPEORM_PASSWORD: string;
