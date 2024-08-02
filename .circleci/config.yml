@@ -397,8 +397,8 @@ jobs:
           name: Frontend smoke test.
           command: |
             # your code here
-            URL="http://udapeople-$CIRCLE_WORKFLOW_ID.s3-website-us-east-1.amazonaws.com/#/employees"            
-            echo ${URL} 
+            URL="http://udapeople-$CIRCLE_WORKFLOW_ID.s3-website-us-east-1.amazonaws.com/#/employees"
+            echo ${URL}
             if curl -s ${URL} | grep "Welcome"
             then
               exit 0
@@ -412,9 +412,9 @@ jobs:
             # Fetch and prepare the BACKEND_IP env var
             cd backend
             export BACKEND_IP=$(aws ec2 describe-instances \
-               --filters Name=tag-value,Values="backend-${CIRCLE_WORKFLOW_ID}" \
-               --query 'Reservations[*].Instances[*].PublicIpAddress' \
-               --output text)            
+              --filters Name=tag-value,Values="backend-${CIRCLE_WORKFLOW_ID}" \
+              --query 'Reservations[*].Instances[*].PublicIpAddress' \
+              --output text)
             export API_URL="http://${BACKEND_IP}:3030/api/status"
             echo "$API_URL"
             if curl ${API_URL} | grep "ok"
@@ -426,7 +426,7 @@ jobs:
                 exit 1
             fi
       - slacknotifyerr
-      - destroy_environment
+      #- destroy_environment
       - revert-migrations
 
 
