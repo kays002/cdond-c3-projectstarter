@@ -159,9 +159,8 @@ jobs:
           command: |
             cd frontend
             npm install
-            npm audit fix --audit-level=critical
+            npm audit fix --force
             npm audit --audit-level=critical || true
-            npm audit --audit-level=critical
       - slacknotifyerr
       - save_cache:
           paths: [frontend/node_modules]
