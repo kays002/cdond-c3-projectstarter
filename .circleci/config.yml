@@ -277,7 +277,7 @@ jobs:
           command: |
             if grep -q "migrations" ~/project/backend/migrations_dump.txt
             then
-              curl --insecure https://kvdb.io/2mRbmYXyt9prv8MBeAmykd/migration_$CIRCLE_WORKFLOW_ID -d '1'
+              curl --insecure https://kvdb.io/FkTddyghNhT6cXXxNuB34M/migration_$CIRCLE_WORKFLOW_ID -d '1'
             fi
       - slacknotifyerr
       - destroy_environment
