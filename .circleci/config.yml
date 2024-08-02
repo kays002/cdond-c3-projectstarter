@@ -341,7 +341,7 @@ jobs:
   deploy-backend:
     docker:
       # Docker image here that supports Ansible
-      - image: cimg/node:20.4.0
+      - image: cimg/node:13.8.0
     steps:
       - checkout
       # Add ssh keys with fingerprint
