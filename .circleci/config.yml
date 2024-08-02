@@ -71,7 +71,7 @@ commands:
 jobs:
   build-frontend:
     docker:
-      - image: circleci/node:13.8.0
+      - image: circleci/node:20.4.0
     steps:
       - checkout
       - restore_cache:
@@ -89,7 +89,7 @@ jobs:
 
   build-backend:
     docker:
-      - image: circleci/node:13.8.0
+      - image: circleci/node:20.4.0
     steps:
       - checkout
       - restore_cache:
@@ -107,7 +107,7 @@ jobs:
 
   test-frontend:
     docker:
-      - image: circleci/node:13.8.0
+      - image: circleci/node:20.4.0
     steps:
       # Checkout code from git
       - checkout
@@ -127,7 +127,7 @@ jobs:
 
   test-backend:
     docker:
-      - image: circleci/node:13.8.0
+      - image: circleci/node:20.4.0
     steps:
       # Checkout code from git
       - checkout
@@ -147,7 +147,7 @@ jobs:
 
   scan-frontend:
     docker:
-      - image: circleci/node:13.8.0
+      - image: circleci/node:20.4.0
     steps:
       # Checkout code from git
       - checkout
@@ -168,7 +168,7 @@ jobs:
 
   scan-backend:
     docker:
-      - image: circleci/node:13.8.0
+      - image: circleci/node:20.4.0
     steps:
       # Checkout code from git
       - checkout
@@ -216,9 +216,9 @@ jobs:
           command: |
             # Your code here
             aws ec2 describe-instances \
-               --filters Name=tag-value,Values="backend-${CIRCLE_WORKFLOW_ID}" \
-               --query 'Reservations[*].Instances[*].PublicIpAddress' \
-               --output text >> .circleci/ansible/inventory.txt
+              --filters Name=tag-value,Values="backend-${CIRCLE_WORKFLOW_ID}" \
+              --query 'Reservations[*].Instances[*].PublicIpAddress' \
+              --output text >> .circleci/ansible/inventory.txt
             cat .circleci/ansible/inventory.txt
       - persist_to_workspace:
           root: ~/
@@ -231,14 +231,14 @@ jobs:
   configure-infrastructure:
     docker:
       # Docker image here that supports Ansible
-      - image: cimg/node:13.8.0
+      - image: cimg/node:20.4.0
     steps:
       # Checkout code from git
       - checkout
       # Add ssh keys with fingerprint
       - add_ssh_keys:
           # You can get this ID in the section where you registered the SSH Key
-          fingerprints: ["9b:80:74:3d:eb:a1:02:05:5d:e4:51:d2:74:d2:e9:9c"]
+          fingerprints: "SHA256:5JmoqC1x3xpooKaBtAKbrd4gy4iH1ZDlL/rjidb+bZY"
 
       - attach_workspace:
           at: ~/
@@ -258,7 +258,7 @@ jobs:
 
   run-migrations:
     docker:
-      - image: cimg/node:13.8.0
+      - image: cimg/node:20.4.0
     steps:
       # Checkout code from git
       - checkout
@@ -285,7 +285,7 @@ jobs:
   deploy-frontend:
     docker:
       # Docker image here that supports AWS CLI
-      - image: cimg/node:13.8.0
+      - image: cimg/node:20.4.0
     steps:
       # Checkout code from git
       - checkout
@@ -313,9 +313,9 @@ jobs:
           name: Get backend url
           command: |
             export BACKEND_IP=$(aws ec2 describe-instances \
-               --filters Name=tag-value,Values="backend-${CIRCLE_WORKFLOW_ID}" \
-               --query 'Reservations[*].Instances[*].PublicIpAddress' \
-               --output text)
+              --filters Name=tag-value,Values="backend-${CIRCLE_WORKFLOW_ID}" \
+              --query 'Reservations[*].Instances[*].PublicIpAddress' \
+              --output text)
             export API_URL="http://${BACKEND_IP}:3030"
             echo "API_URL = ${API_URL}"
             echo "API_URL=http://${BACKEND_IP}:3030" >> frontend/.env
@@ -341,7 +341,7 @@ jobs:
   deploy-backend:
     docker:
       # Docker image here that supports Ansible
-      - image: cimg/node:13.8.0
+      - image: cimg/node:20.4.0
     steps:
       - checkout
       # Add ssh keys with fingerprint
@@ -387,7 +387,7 @@ jobs:
 
   smoke-test:
     docker:
-      - image: cimg/node:13.8.0
+      - image: cimg/node:20.4.0
     steps:
       - checkout
       - install_awscli
