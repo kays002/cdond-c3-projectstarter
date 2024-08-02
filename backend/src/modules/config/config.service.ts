@@ -29,9 +29,6 @@ export class ConfigService {
   }
 
   private validateInput(envConfig): EnvConfig {
-    console.log('TYPEORM_ENTITIES before validation:', envConfig.TYPEORM_ENTITIES);
-    console.log('TYPEORM_HOST before validation:', envConfig.TYPEORM_HOST);
-    console.log('TYPEORM_PASSWORD before validation:', envConfig.TYPEORM_PASSWORD);// Debug log
     const envVarsSchema: Joi.ObjectSchema = Joi.object({
       TYPEORM_CONNECTION: Joi.string().default('postgres'),
       VERSION: Joi.string().default('local'),
