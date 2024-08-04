@@ -1,0 +1,2 @@
+https://github.com/kays002/cdond-c3-projectstarter
+https://udapeople-67f457e.s3.amazonaws.com/index.html
